@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 
 export const createResponse = <T>(data: T, message?: string) => {
   return {
@@ -6,7 +6,7 @@ export const createResponse = <T>(data: T, message?: string) => {
     data,
     error: null,
     meta: {
-      requestId: new ObjectId().toString(),
+      requestId: new mongoose.Types.ObjectId().toString(),
       timestamp: new Date().toISOString(),
       message
     }
@@ -23,7 +23,7 @@ export const createError = (code: string, message: string, details?: any) => {
     },
     data: null,
     meta: {
-      requestId: new ObjectId().toString(),
+      requestId: new mongoose.Types.ObjectId().toString(),
       timestamp: new Date().toISOString()
     }
   };
