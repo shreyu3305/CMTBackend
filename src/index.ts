@@ -15,16 +15,37 @@ dotenv.config();
 const app: Express = express();
 const PORT = process.env.PORT || 8080;
 
-// Security middleware
-app.use(helmet());
+// CORS configuration - MUST be before other middleware
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map(origin => origin.trim()) || [
+  'https://communitymedicinetracker.web.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
 
-// CORS configuration
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN?.split(',') || '*',
-    credentials: true
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Allow all origins for now, can restrict later
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Type', 'Authorization']
   })
 );
+
+// Security middleware
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginEmbedderPolicy: false
+}));
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
