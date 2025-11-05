@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 export interface TokenPayload {
@@ -13,9 +13,10 @@ export class AuthService {
     if (!secret) {
       throw new Error('JWT_ACCESS_SECRET is not defined');
     }
-    return jwt.sign(payload, secret, {
+    const options: SignOptions = {
       expiresIn: process.env.JWT_ACCESS_EXPIRY || '15m'
-    });
+    };
+    return jwt.sign(payload, secret, options);
   }
 
   generateRefreshToken(payload: TokenPayload): string {
@@ -23,9 +24,10 @@ export class AuthService {
     if (!secret) {
       throw new Error('JWT_REFRESH_SECRET is not defined');
     }
-    return jwt.sign(payload, secret, {
+    const options: SignOptions = {
       expiresIn: process.env.JWT_REFRESH_EXPIRY || '7d'
-    });
+    };
+    return jwt.sign(payload, secret, options);
   }
 
   verifyAccessToken(token: string): TokenPayload {
