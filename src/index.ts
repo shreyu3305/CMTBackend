@@ -46,12 +46,12 @@ app.use('/api/', limiter);
 app.use('/api/v1', routes);
 
 // Health check
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.json({ ok: true, status: 'healthy', timestamp: new Date().toISOString() });
 });
 
 // 404 handler
-app.use((req: Request, res: Response) => {
+app.use((_req: Request, res: Response) => {
   res.status(404).json({ ok: false, error: { code: 'NOT_FOUND', message: 'Route not found' } });
 });
 

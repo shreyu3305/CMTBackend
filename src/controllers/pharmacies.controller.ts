@@ -127,11 +127,10 @@ export const updatePharmacy = async (req: AuthRequest, res: Response): Promise<v
       return;
     }
 
-    // Check if user is pharmacist and owns this pharmacy, or is admin
-    const isAdmin = user.role === 'admin' || user.role === 'ADMIN';
+    // Check if user is pharmacist and owns this pharmacy
     const isOwner = user.pharmacyId && user.pharmacyId.toString() === id;
     
-    if (!isAdmin && !isOwner) {
+    if (!isOwner) {
       res.status(403).json(createError('FORBIDDEN', 'You can only update your own pharmacy'));
       return;
     }

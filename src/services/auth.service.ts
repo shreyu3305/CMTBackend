@@ -9,23 +9,39 @@ export interface TokenPayload {
 
 export class AuthService {
   generateAccessToken(payload: TokenPayload): string {
-    return jwt.sign(payload, process.env.JWT_ACCESS_SECRET!, {
+    const secret = process.env.JWT_ACCESS_SECRET;
+    if (!secret) {
+      throw new Error('JWT_ACCESS_SECRET is not defined');
+    }
+    return jwt.sign(payload, secret, {
       expiresIn: process.env.JWT_ACCESS_EXPIRY || '15m'
     });
   }
 
   generateRefreshToken(payload: TokenPayload): string {
-    return jwt.sign(payload, process.env.JWT_REFRESH_SECRET!, {
+    const secret = process.env.JWT_REFRESH_SECRET;
+    if (!secret) {
+      throw new Error('JWT_REFRESH_SECRET is not defined');
+    }
+    return jwt.sign(payload, secret, {
       expiresIn: process.env.JWT_REFRESH_EXPIRY || '7d'
     });
   }
 
   verifyAccessToken(token: string): TokenPayload {
-    return jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as TokenPayload;
+    const secret = process.env.JWT_ACCESS_SECRET;
+    if (!secret) {
+      throw new Error('JWT_ACCESS_SECRET is not defined');
+    }
+    return jwt.verify(token, secret) as TokenPayload;
   }
 
   verifyRefreshToken(token: string): TokenPayload {
-    return jwt.verify(token, process.env.JWT_REFRESH_SECRET!) as TokenPayload;
+    const secret = process.env.JWT_REFRESH_SECRET;
+    if (!secret) {
+      throw new Error('JWT_REFRESH_SECRET is not defined');
+    }
+    return jwt.verify(token, secret) as TokenPayload;
   }
 
   async hashPassword(password: string): Promise<string> {
