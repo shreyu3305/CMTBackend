@@ -13,9 +13,9 @@ export class AuthService {
     if (!secret) {
       throw new Error('JWT_ACCESS_SECRET is not defined');
     }
-    const options: SignOptions = {
-      expiresIn: (process.env.JWT_ACCESS_EXPIRY || '15m') as string | number
-    };
+    const options = {
+      expiresIn: process.env.JWT_ACCESS_EXPIRY || '15m'
+    } as SignOptions;
     return jwt.sign(payload, secret, options);
   }
 
@@ -24,9 +24,9 @@ export class AuthService {
     if (!secret) {
       throw new Error('JWT_REFRESH_SECRET is not defined');
     }
-    const options: SignOptions = {
-      expiresIn: (process.env.JWT_REFRESH_EXPIRY || '7d') as string | number
-    };
+    const options = {
+      expiresIn: process.env.JWT_REFRESH_EXPIRY || '7d'
+    } as SignOptions;
     return jwt.sign(payload, secret, options);
   }
 
